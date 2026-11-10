@@ -1,3 +1,12 @@
+Perfect! You are super fast! 💜
+
+Now here is your NEW FIXED CODE - it will make uploading work with one tap on phone.
+
+*DO THIS:*
+
+1. In that edit box where you deleted everything, *PASTE this code below*
+
+2. Copy from `<!DOCTYPE html>` to `</html>` - everything:
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,90 +14,152 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Alhaja Animate AI</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:sans-serif}
-body{background:linear-gradient(135deg,#667eea,#764ba2,#f093fb);min-height:100vh;padding:14px}
-.box{max-width:480px;margin:0 auto}
-.head{background:#fff;border-radius:22px;padding:18px;display:flex;gap:12px;align-items:center;margin-bottom:14px}
-.logo{width:52px;height:52px;background:linear-gradient(135deg,#7c3aed,#ec4899);border-radius:14px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:24px}
-.card{background:#fff;border-radius:22px;padding:22px}
-.upload{border:2px dashed #a78bfa;border-radius:18px;padding:28px;text-align:center;background:#faf5ff}
-.btn{width:100%;margin-top:18px;background:linear-gradient(135deg,#7c3aed,#ec4899);color:#fff;border:none;padding:16px;border-radius:14px;font-size:18px;font-weight:700}
-select,textarea{width:100%;padding:12px;border:2px solid #e2e8f0;border-radius:10px;margin-top:8px}
-.row{display:flex;gap:10px;margin-top:10px}
-.result{margin-top:16px;display:none}
-video{width:100%;border-radius:14px;background:#000}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:linear-gradient(135deg,#7c3aed,#ec4899);min-height:100vh;font-family:sans-serif;padding:14px}
+.card{max-width:480px;margin:0 auto;background:#fff;border-radius:22px;overflow:hidden;box-shadow:0 20px 40px rgba(0,0,0,.2)}
+.header{background:linear-gradient(90deg,#7c3aed,#ec4899);padding:18px;color:#fff;display:flex;gap:10px;align-items:center}
+.content{padding:18px}
+.upload-area{border:2.5px dashed #c4b5fd;border-radius:16px;padding:20px;text-align:center;background:#faf5ff;cursor:pointer;min-height:170px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.upload-area img{max-width:100%;max-height:260px;border-radius:12px;display:none;margin-top:8px}
+#fileInput{display:none}
+.btn{width:100%;padding:15px;background:linear-gradient(90deg,#7c3aed,#ec4899);color:#fff;border:none;border-radius:12px;font-weight:700;font-size:16px;margin-top:16px}
+.progress{height:8px;background:#eee;border-radius:10px;margin-top:14px;overflow:hidden;display:none}
+.bar{height:100%;width:0%;background:linear-gradient(90deg,#7c3aed,#ec4899)}
+video{width:100%;border-radius:12px;margin-top:14px;display:none}
 </style>
 </head>
 <body>
-<div class="box">
-<div class="head"><div class="logo">▶</div><div><b>Alhaja Animate AI</b><br><small>Image → Video | AI Powered</small></div></div>
 <div class="card">
-<h2>Create Your Video</h2>
-<p style="color:#64748b;font-size:13px;margin:6px 0 14px">Upload an image and generate motion video</p>
-<div class="upload" onclick="document.getElementById('f').click()">⬆️<br><b>Upload Image</b><br><small>JPG, PNG, WEBP</small></div>
-<input type="file" id="f" accept="image/*" hidden>
-<img id="prev" style="width:100%;border-radius:12px;display:none;margin-top:10px">
-<canvas id="c" hidden></canvas>
-<label style="margin-top:14px;display:block;font-weight:600">Prompt</label>
-<textarea id="p" rows="2" placeholder="e.g., gentle wind, soft zoom"></textarea>
-<div class="row"><div style="flex:1"><label>Duration</label><select id="d"><option value="3">3s</option><option value="5" selected>5s</option><option value="8">8s</option></select></div><div style="flex:1"><label>Style</label><select id="s"><option>Zoom In</option><option>Zoom Out</option><option>Pan Left</option><option>Pan Right</option><option selected>Ken Burns</option></select></div></div>
-<button class="btn" id="b" onclick="go()">✨ Generate Video</button>
-<div id="st" style="display:none;margin-top:10px;padding:10px;background:#f1f5f9;border-radius:8px;font-size:13px"></div>
-<div class="result" id="r"><video id="v" controls playsinline></video><br><a id="dl" download="alhaja-video.webm" style="display:inline-block;margin-top:8px;background:#1e293b;color:#fff;padding:10px 16px;border-radius:8px;text-decoration:none">⬇️ Download Video</a></div>
+<div class="header">
+<div style="background:#fff;color:#7c3aed;width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px">▶</div>
+<div><b>Alhaja Animate AI</b><br><small>Image → Video | AI Powered</small></div>
+</div>
+<div class="content">
+<h3>Create Your Video</h3>
+<p style="font-size:12px;color:#666;margin:4px 0 12px">Upload image and generate motion video</p>
+<div class="upload-area" id="dropZone">
+<div id="uploadPrompt">
+<div style="font-size:32px">⬆️</div>
+<b>Tap to Upload Image</b><br>
+<small>JPG, PNG, WEBP</small><br>
+<small style="color:#7c3aed">Tap here to open gallery</small>
+</div>
+<img id="previewImg">
+<input type="file" id="fileInput" accept="image/*">
+</div>
+<p id="fileName" style="font-size:12px;color:#059669;margin-top:6px"></p>
+<label style="font-weight:600;font-size:13px;margin:12px 0 4px;display:block">Prompt</label>
+<input id="prompt" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:10px" value="gentle zoom in, soft motion, dancing">
+<div style="display:flex;gap:10px;margin-top:10px">
+<div style="flex:1"><label style="font-size:12px;font-weight:600">Duration</label><select id="duration" style="width:100%;padding:10px;border-radius:8px"><option>3</option><option selected>5</option><option>8</option><option>10</option></select></div>
+<div style="flex:1"><label style="font-size:12px;font-weight:600">Style</label><select id="style" style="width:100%;padding:10px;border-radius:8px"><option value="kenburns" selected>Zoom</option><option value="pan">Pan</option><option value="pulse">Pulse</option><option value="dance">Dance Bounce</option></select></div>
+</div>
+<button class="btn" id="genBtn">✨ Generate Video</button>
+<div class="progress" id="progressWrap"><div class="bar" id="bar"></div></div>
+<p id="status" style="font-size:12px;text-align:center;margin-top:6px;color:#666"></p>
+<video id="resultVideo" controls playsinline></video>
+<a id="downloadLink" style="display:none;margin-top:10px;background:#111;color:#fff;padding:12px;border-radius:10px;text-align:center;text-decoration:none;font-weight:700">⬇️ Download Video</a>
+<p style="font-size:10px;color:#999;text-align:center;margin-top:14px">Made by Alhaja Aridunu - Works 100% offline</p>
 </div>
 </div>
 <script>
-let im=null;
-document.getElementById('f').addEventListener('change',e=>{
- let file=e.target.files[0]; if(!file) return;
- let rd=new FileReader();
- rd.onload=ev=>{
-   im=new Image();
-   im.onload=()=>{ document.getElementById('prev').src=ev.target.result; document.getElementById('prev').style.display='block'; };
-   im.src=ev.target.result;
- };
- rd.readAsDataURL(file);
+const fileInput=document.getElementById('fileInput');
+const dropZone=document.getElementById('dropZone');
+const previewImg=document.getElementById('previewImg');
+const uploadPrompt=document.getElementById('uploadPrompt');
+const fileName=document.getElementById('fileName');
+const genBtn=document.getElementById('genBtn');
+const resultVideo=document.getElementById('resultVideo');
+const bar=document.getElementById('bar');
+const progressWrap=document.getElementById('progressWrap');
+const statusEl=document.getElementById('status');
+const downloadLink=document.getElementById('downloadLink');
+let imageFile=null;
+let imageElement=new Image();
+function openPicker(){fileInput.click();}
+dropZone.addEventListener('click',openPicker);
+fileInput.addEventListener('change',e=>{
+ if(e.target.files[0]) handleFileList(e.target.files);
 });
-async function go(){
- if(!im){ alert('Upload image first'); return; }
- let b=document.getElementById('b'), st=document.getElementById('st'), d=parseInt(document.getElementById('d').value), s=document.getElementById('s').value;
- b.disabled=true; b.textContent='⏳ Generating...'; st.style.display='block';
- let canvas=document.getElementById('c'), ctx=canvas.getContext('2d');
- canvas.width=720; canvas.height=1280;
- let stream=canvas.captureStream(30);
- let rec=new MediaRecorder(stream,{mimeType:'video/webm;codecs=vp9'});
- let ch=[];
- rec.ondataavailable=e=>{ if(e.data.size>0) ch.push(e.data); };
- rec.onstop=()=>{
-   let blob=new Blob(ch,{type:'video/webm'});
-   let url=URL.createObjectURL(blob);
-   document.getElementById('v').src=url;
-   document.getElementById('dl').href=url;
-   document.getElementById('r').style.display='block';
-   st.textContent='✅ Video Ready!';
-   b.disabled=false; b.textContent='✨ Generate Video';
- };
+function handleFileList(files){
+ const f=files[0];
+ if(!f.type.startsWith('image/')){alert('Choose image');return;}
+ imageFile=f;
+ const url=URL.createObjectURL(f);
+ previewImg.src=url;
+ previewImg.style.display='block';
+ uploadPrompt.style.display='none';
+ fileName.textContent='✅ Loaded: '+f.name;
+ imageElement.src=url;
+ statusEl.textContent='Image ready! Now tap Generate Video';
+}
+genBtn.addEventListener('click',async()=>{
+ if(!imageFile){alert('Tap the dashed box first to choose image');openPicker();return;}
+ genBtn.disabled=true;
+ progressWrap.style.display='block';
+ bar.style.width='10%';
+ statusEl.textContent='Generating video...';
+ try{
+  const duration=parseInt(document.getElementById('duration').value);
+  const style=document.getElementById('style').value;
+  const blob=await createVideo(imageElement,duration,style);
+  const url=URL.createObjectURL(blob);
+  resultVideo.src=url;
+  resultVideo.style.display='block';
+  downloadLink.href=url;
+  downloadLink.download='alhaja-video-'+Date.now()+'.webm';
+  downloadLink.style.display='block';
+  bar.style.width='100%';
+  statusEl.textContent='✅ Video ready!';
+  resultVideo.play();
+ }catch(err){alert('Error: '+err.message);statusEl.textContent='Error: '+err.message;}
+ genBtn.disabled=false;
+});
+async function createVideo(img,durationSec,style){
+ await new Promise(r=>{if(img.complete) r(); else img.onload=r;});
+ const canvas=document.createElement('canvas');
+ canvas.width=720;
+ canvas.height=Math.round(720*img.naturalHeight/img.naturalWidth);
+ if(canvas.height>1280) canvas.height=1280;
+ const ctx=canvas.getContext('2d');
+ const fps=30;
+ const total=durationSec*fps;
+ const stream=canvas.captureStream(fps);
+ const chunks=[];
+ const rec=new MediaRecorder(stream,{mimeType:'video/webm;codecs=vp9'});
+ rec.ondataavailable=e=>{if(e.data.size>0) chunks.push(e.data)};
+ const done=new Promise(r=>rec.onstop=r);
  rec.start();
- let start=performance.now();
- function anim(now){
-   let el=(now-start)/1000;
-   if(el>=d){ rec.stop(); return; }
-   let pr=el/d;
-   ctx.fillStyle='#000'; ctx.fillRect(0,0,canvas.width,canvas.height);
-   let sc=1, x=0, y=0;
-   if(s=='Zoom In') sc=1+pr*0.4;
-   else if(s=='Zoom Out') sc=1.4-pr*0.4;
-   else if(s=='Pan Left') x=-pr*150;
-   else if(s=='Pan Right') x=pr*150;
-   else{ sc=1+pr*0.3; x=Math.sin(pr*Math.PI)*50; }
-   let ratio=Math.max(canvas.width/im.width, canvas.height/im.height);
-   let w=im.width*ratio*sc, h=im.height*ratio*sc;
-   ctx.drawImage(im, canvas.width/2-w/2+x, canvas.height/2-h/2+y, w, h);
-   st.textContent='🎬 Recording '+Math.round(pr*100)+'% - '+s;
-   requestAnimationFrame(anim);
+ for(let i=0;i<total;i++){
+  const t=i/total;
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.save();
+  let scale=1,tx=0,ty=0,rot=0;
+  if(style==='kenburns') scale=1+t*0.35;
+  if(style==='pan'){scale=1.2;tx=(t-0.5)*120;}
+  if(style==='pulse') scale=1+Math.sin(t*Math.PI*4)*0.08+t*0.15;
+  if(style==='dance'){scale=1.15+Math.sin(t*Math.PI*8)*0.06;ty=Math.sin(t*Math.PI*6)*14;rot=Math.sin(t*Math.PI*4)*0.03;}
+  ctx.translate(canvas.width/2,canvas.height/2);
+  ctx.rotate(rot);
+  ctx.scale(scale,scale);
+  ctx.translate(-canvas.width/2+tx,-canvas.height/2+ty);
+  ctx.drawImage(img,0,0,canvas.width,canvas.height);
+  ctx.restore();
+  bar.style.width=Math.round(t*90+10)+'%';
+  statusEl.textContent='Generating '+Math.round(t*100)+'%';
+  await new Promise(r=>setTimeout(r,1000/fps/3));
  }
- requestAnimationFrame(anim);
+ rec.stop();
+ await done;
+ return new Blob(chunks,{type:'video/webm'});
 }
 </script>
 </body>
 </html>
+3. After pasting, scroll down and tap *Commit changes* or *Save* (green button)
+
+4. Wait 2 minutes, then open your live site again: `alhaja-aridunu.github.io/animate--ai`
+
+This new version, when you tap the dashed box, it will OPEN GALLERY immediately!
+
+Paste it now and tell me when you click Commit!
