@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alhaja Animate AI</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:sans-serif}
+body{background:linear-gradient(135deg,#667eea,#764ba2,#f093fb);min-height:100vh;padding:14px}
+.box{max-width:480px;margin:0 auto}
+.head{background:#fff;border-radius:22px;padding:18px;display:flex;gap:12px;align-items:center;margin-bottom:14px}
+.logo{width:52px;height:52px;background:linear-gradient(135deg,#7c3aed,#ec4899);border-radius:14px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:24px}
+.card{background:#fff;border-radius:22px;padding:22px}
+.upload{border:2px dashed #a78bfa;border-radius:18px;padding:28px;text-align:center;background:#faf5ff}
+.btn{width:100%;margin-top:18px;background:linear-gradient(135deg,#7c3aed,#ec4899);color:#fff;border:none;padding:16px;border-radius:14px;font-size:18px;font-weight:700}
+select,textarea{width:100%;padding:12px;border:2px solid #e2e8f0;border-radius:10px;margin-top:8px}
+.row{display:flex;gap:10px;margin-top:10px}
+.result{margin-top:16px;display:none}
+video{width:100%;border-radius:14px;background:#000}
+</style>
+</head>
+<body>
+<div class="box">
+<div class="head"><div class="logo">▶</div><div><b>Alhaja Animate AI</b><br><small>Image → Video | AI Powered</small></div></div>
+<div class="card">
+<h2>Create Your Video</h2>
+<p style="color:#64748b;font-size:13px;margin:6px 0 14px">Upload an image and generate motion video</p>
+<div class="upload" onclick="document.getElementById('f').click()">⬆️<br><b>Upload Image</b><br><small>JPG, PNG, WEBP</small></div>
+<input type="file" id="f" accept="image/*" hidden>
+<img id="prev" style="width:100%;border-radius:12px;display:none;margin-top:10px">
+<canvas id="c" hidden></canvas>
+<label style="margin-top:14px;display:block;font-weight:600">Prompt</label>
+<textarea id="p" rows="2" placeholder="e.g., gentle wind, soft zoom"></textarea>
+<div class="row"><div style="flex:1"><label>Duration</label><select id="d"><option value="3">3s</option><option value="5" selected>5s</option><option value="8">8s</option></select></div><div style="flex:1"><label>Style</label><select id="s"><option>Zoom In</option><option>Zoom Out</option><option>Pan Left</option><option>Pan Right</option><option selected>Ken Burns</option></select></div></div>
+<button class="btn" id="b" onclick="go()">✨ Generate Video</button>
+<div id="st" style="display:none;margin-top:10px;padding:10px;background:#f1f5f9;border-radius:8px;font-size:13px"></div>
+<div class="result" id="r"><video id="v" controls playsinline></video><br><a id="dl" download="alhaja-video.webm" style="display:inline-block;margin-top:8px;background:#1e293b;color:#fff;padding:10px 16px;border-radius:8px;text-decoration:none">⬇️ Download Video</a></div>
+</div>
+</div>
+<script>
+let im=null;
+document.getElementById('f').addEventListener('change',e=>{
+ let file=e.target.files[0]; if(!file) return;
+ let rd=new FileReader();
+ rd.onload=ev=>{
+   im=new Image();
+   im.onload=()=>{ document.getElementById('prev').src=ev.target.result; document.getElementById('prev').style.display='block'; };
+   im.src=ev.target.result;
+ };
+ rd.readAsDataURL(file);
+});
+async function go(){
+ if(!im){ alert('Upload image first'); return; }
+ let b=document.getElementById('b'), st=document.getElementById('st'), d=parseInt(document.getElementById('d').value), s=document.getElementById('s').value;
+ b.disabled=true; b.textContent='⏳ Generating...'; st.style.display='block';
+ let canvas=document.getElementById('c'), ctx=canvas.getContext('2d');
+ canvas.width=720; canvas.height=1280;
+ let stream=canvas.captureStream(30);
+ let rec=new MediaRecorder(stream,{mimeType:'video/webm;codecs=vp9'});
+ let ch=[];
+ rec.ondataavailable=e=>{ if(e.data.size>0) ch.push(e.data); };
+ rec.onstop=()=>{
+   let blob=new Blob(ch,{type:'video/webm'});
+   let url=URL.createObjectURL(blob);
+   document.getElementById('v').src=url;
+   document.getElementById('dl').href=url;
+   document.getElementById('r').style.display='block';
+   st.textContent='✅ Video Ready!';
+   b.disabled=false; b.textContent='✨ Generate Video';
+ };
+ rec.start();
+ let start=performance.now();
+ function anim(now){
+   let el=(now-start)/1000;
+   if(el>=d){ rec.stop(); return; }
+   let pr=el/d;
+   ctx.fillStyle='#000'; ctx.fillRect(0,0,canvas.width,canvas.height);
+   let sc=1, x=0, y=0;
+   if(s=='Zoom In') sc=1+pr*0.4;
+   else if(s=='Zoom Out') sc=1.4-pr*0.4;
+   else if(s=='Pan Left') x=-pr*150;
+   else if(s=='Pan Right') x=pr*150;
+   else{ sc=1+pr*0.3; x=Math.sin(pr*Math.PI)*50; }
+   let ratio=Math.max(canvas.width/im.width, canvas.height/im.height);
+   let w=im.width*ratio*sc, h=im.height*ratio*sc;
+   ctx.drawImage(im, canvas.width/2-w/2+x, canvas.height/2-h/2+y, w, h);
+   st.textContent='🎬 Recording '+Math.round(pr*100)+'% - '+s;
+   requestAnimationFrame(anim);
+ }
+ requestAnimationFrame(anim);
+}
+</script>
+</body>
+</html>
